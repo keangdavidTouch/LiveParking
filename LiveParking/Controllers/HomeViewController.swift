@@ -8,19 +8,34 @@
 
 import UIKit
 import CoreLocation
+import MapKit
 
 class HomeViewController: UIViewController {
     
-    var parkingModel:ParkingModel!
+    var model:ParkingModel!
+    let request = ParkingAPIRequest()
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-        
-        DispatchQueue.global(qos: .default).async {
-            self.requestJSONFromAPI()
+        fetchRealTimeParkingRecord()
+    }
+    
+    func fetchRealTimeParkingRecord() {
+        DispatchQueue.global(qos: .userInteractive).async {
+            self.request.load { [weak self] (parkingModel:ParkingModel?) in
+                guard let model = parkingModel else { return }
+                self?.model = model
+                if let sortIndex = UserPreferences.sortOrder.value as? Int {
+                    self?.model.sortRecords(by: ParkingSortOrder(rawValue: sortIndex) ?? .alphabet)
+                }
+                self?.calculateDistance()
+                OperationQueue.main.addOperation {
+                    self!.tableView.reloadData()
+                }
+            }
         }
     }
     
@@ -28,30 +43,18 @@ class HomeViewController: UIViewController {
         self.performSegue(withIdentifier: "ViewSort", sender: self)
     }
     
-    private func requestJSONFromAPI() {
-        var request = URLRequest(url: URL(string: "https://data.stad.gent/api/records/1.0/search/?dataset=bezetting-parkeergarages-real-time&q=&rows=10")!)
-        request.httpMethod = "GET"
-
-        URLSession.shared.dataTask(with: request, completionHandler: { data, response,  error -> Void in
+    private func calculateDistance() {
+        
+        guard let from = LocationService.shared.latestLocation else { return }
+        
+        for i in model.records.indices {
             
-            if let data = data {
-                self.parseJSONFromData(data)
+            let to = model.records[i].geometry.location
+            
+            LocationService.shared.calculateTripDistance(from, to) { (distance) in
+                self.model.records[i].userDistance = distance / 1000.0
+                print("\(distance / 1000.0) KM")
             }
-            
-        }).resume()
-    }
-    
-    private func parseJSONFromData(_ data:Data) {
-     
-        do {
-            parkingModel = try JSONDecoder().decode(ParkingModel.self, from: data)
-            
-            OperationQueue.main.addOperation {
-                self.tableView.reloadData()
-            }
-            
-        } catch {
-            print(error)
         }
     }
     
@@ -60,56 +63,26 @@ class HomeViewController: UIViewController {
         if let detailVC = segue.destination as? DetailViewController {
             if let indexPath = tableView.indexPathForSelectedRow {
                 detailVC.delegate = self
-                detailVC.parkingRecord = parkingModel.records[indexPath.row]
+                detailVC.model = model.records[indexPath.row]
             }
         }
-    }
-    
-    private func calculateDistance() {
-        
-        guard let currentLocation = LocationService.shared.latestLocation else { return }
-        
-        for i in parkingModel.records.indices {
-            parkingModel.records[i].distanceFromUser = currentLocation.distance(from: parkingModel.records[i].geometry.clLocation) / 1000
+        else if let sortVC = segue.destination as? SortViewController {
+            sortVC.delegate = self
         }
     }
-    
 }
 
 extension HomeViewController: DetailViewControllerDelegate {
+    
     func detailViewControllerDidPressPark() {
-        if let indexPath = tableView.indexPathForSelectedRow {
-            for i in parkingModel.records.indices {
-                parkingModel.records[i].isParkByUser = false
-            }
-            parkingModel.records[indexPath.row].isParkByUser = true
-            self.tableView.reloadData()
-        }
+        self.tableView.reloadData()
     }
 }
 
 extension HomeViewController: SortViewControllerDelegate {
+    
     func sortViewControllerDidPressSortBy(sortOrder: ParkingSortOrder) {
-        
-        switch sortOrder {
-            case .alphabet:
-                self.parkingModel.records.sort {
-                    $0.fields.name.lowercased() < $1.fields.name.lowercased()
-                }
-                break
-            case .capacity:
-                self.parkingModel.records.sort {
-                    $0.fields.availablecapacity > $1.fields.availablecapacity
-                }
-                break
-            case .distance:
-                self.calculateDistance()
-                self.parkingModel.records.sort {
-                    $0.distanceFromUser < $1.distanceFromUser
-                }
-                break
-        }
-        
+        self.model.sortRecords(by: sortOrder)
         self.tableView.reloadData()
     }
 }
@@ -117,7 +90,6 @@ extension HomeViewController: SortViewControllerDelegate {
 extension HomeViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         self.performSegue(withIdentifier: "ViewDetail", sender: self)
     }
 }
@@ -126,23 +98,22 @@ extension HomeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if let model = parkingModel {
-            return model.records.count
+        guard let model = model else {
+            return 0
         }
-        
-        return 0
+        return model.records.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let identifier = "ParkingTableViewCell"
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as! ParkingTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: ParkingTableViewCell.reuseIdentifier) as! ParkingTableViewCell
         
-        if let model = parkingModel {
-            let field = model.records[indexPath.row].fields
-            cell.nameLabel.text = field.name
-            cell.amountLabel.text = "\(field.availablecapacity) Available   (\(Int(model.records[indexPath.row].distanceFromUser)) km)"
-            cell.parkLabel.isHidden = !model.records[indexPath.row].isParkByUser
+        if let model = model {
+            let viewModel = ParkingViewModel(model: model.records[indexPath.row])
+            cell.nameLabel.text = viewModel.name
+            cell.amountLabel.text = viewModel.capacityDescription
+            cell.amountLabel.textColor = viewModel.capacityColor
+            cell.parkLabel.isHidden = viewModel.isParkingHidden
         }
         
         return cell

@@ -16,7 +16,8 @@ protocol DetailViewControllerDelegate: class {
 
 class DetailViewController: UITableViewController {
  
-    var parkingRecord:Record!
+    var model:Record!
+    private var viewModel:DetailViewModel!
     weak var delegate:DetailViewControllerDelegate?
     
     @IBOutlet weak var nameLabel: UILabel!
@@ -28,25 +29,27 @@ class DetailViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let field = parkingRecord.fields
-        nameLabel.text = field.name
-        contactDetailLabel.text = field.contactinfo
-        addressLabel.text = field.address
+        viewModel = DetailViewModel(model: model)
+        viewModel.parkButtonView = { [weak self] (text, color) in
+            self?.parkLabel.text = text
+            self?.parkLabel.textColor = color
+        }
+        viewModel.updateParkingState()
         
-        parkLabel.text = parkingRecord.isParkByUser ? "PARKED!" : "PARK HERE"
-
-        let location = parkingRecord.geometry.clLocation
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = location.coordinate
-        self.mapView.addAnnotation(annotation)
-        self.mapView.centerToLocation(location, regionRadius: 300)
+        nameLabel.text = viewModel.name
+        contactDetailLabel.text = viewModel.contactInfo
+        addressLabel.text = viewModel.address
+        mapView.addAnnotation(viewModel.mapAnnotation)
+        mapView.centerToLocation(viewModel.mapLocation, regionRadius: viewModel.mapRegionRadius)
+        
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if indexPath.section == 2 {
+            UserPreferences.parkingID.save(!viewModel.parkByUser ? model.fields.id : "")
+            viewModel.updateParkingState()
             delegate?.detailViewControllerDidPressPark()
-            parkLabel.text = "PARKED!"
         }
     }
 }

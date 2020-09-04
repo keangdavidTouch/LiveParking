@@ -22,5 +22,4 @@ enum ParkingSortOrder:Int, CaseIterable {
         case .capacity: return "Available Capacity"
         }
     }
-    
 }

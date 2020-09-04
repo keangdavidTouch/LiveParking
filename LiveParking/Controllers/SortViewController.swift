@@ -17,12 +17,16 @@ class SortViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     weak var delegate:SortViewControllerDelegate?
-    var selectedSortOrder = ParkingSortOrder.alphabet
+    var selectedSortIndex = ParkingSortOrder.alphabet.rawValue
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        
+        if let sortIndex = UserPreferences.sortOrder.value as? Int {
+             selectedSortIndex = sortIndex
+        }
     }
 }
 
@@ -30,11 +34,12 @@ extension SortViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let previousSelectedIndexPath = IndexPath(row: selectedSortOrder.rawValue, section: 0)
+        let previousSelectedIndexPath = IndexPath(row: selectedSortIndex, section: 0)
         tableView.cellForRow(at: previousSelectedIndexPath)?.accessoryType = .none
         
-        selectedSortOrder = ParkingSortOrder(rawValue: indexPath.row) ?? ParkingSortOrder.alphabet
-        delegate?.sortViewControllerDidPressSortBy(sortOrder: selectedSortOrder)
+        selectedSortIndex = indexPath.row
+        UserPreferences.sortOrder.save(selectedSortIndex)
+        delegate?.sortViewControllerDidPressSortBy(sortOrder: ParkingSortOrder(rawValue: selectedSortIndex) ?? .alphabet)
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         
         self.navigationController?.popToRootViewController(animated: true)
@@ -49,11 +54,10 @@ extension SortViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
      
-        let identifier = "SortTableViewCell"
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as! SortTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: SortTableViewCell.reuseIdentifier) as! SortTableViewCell
         cell.title.text = ParkingSortOrder(rawValue: indexPath.row)?.title
         
-        if indexPath.row == selectedSortOrder.rawValue {
+        if indexPath.row == selectedSortIndex {
             cell.accessoryType = .checkmark
         }
         

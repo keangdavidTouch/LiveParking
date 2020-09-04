@@ -6,13 +6,14 @@
 //  Copyright © 2020 Keang David. All rights reserved.
 //
 
-import Foundation
+import MapKit
 import CoreLocation
 
 class LocationService:NSObject, CLLocationManagerDelegate {
     
     static var shared = LocationService()
     private var locationManager:CLLocationManager!
+    private let geoCoder = CLGeocoder()
     var latestLocation:CLLocation!
     
     private override init() {
@@ -42,14 +43,31 @@ class LocationService:NSObject, CLLocationManagerDelegate {
     }
     
     func getLocationDescription(from location:CLLocation, completion: @escaping(String) -> ()) {
-        
-        let geoCoder = CLGeocoder()
         geoCoder.reverseGeocodeLocation(location) { placemarks, _ in
             if let place = placemarks?.first {
                 
                 let description = "\(place.thoroughfare!) \(place.postalCode!) \(place.locality!) \(place.country!)"
                 completion(description)
           }
+        }
+    }
+    
+    func calculateTripDistance(_ from:CLLocation, _ to:CLLocation, completion: @escaping(CLLocationDistance) -> ()) {
+        let source          = MKPlacemark(coordinate: from.coordinate)
+        let destination     = MKPlacemark(coordinate: to.coordinate)
+        
+        let request = MKDirections.Request()
+        request.source      = MKMapItem(placemark: source)
+        request.destination = MKMapItem(placemark: destination)
+        request.transportType = MKDirectionsTransportType.automobile;
+        request.requestsAlternateRoutes = true
+
+        let directions = MKDirections(request: request)
+
+        directions.calculate { (response, error) in
+            if let response = response, let route = response.routes.first {
+                completion(route.distance)
+            }
         }
     }
 }

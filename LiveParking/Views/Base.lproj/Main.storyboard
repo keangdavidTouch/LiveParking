@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="uck-Df-b5S">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="uck-Df-b5S">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -26,6 +26,7 @@
         <!--Ghent Parking-->
         <scene sceneID="15W-L6-04B">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YNd-9C-7vh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController id="G80-n3-vei" customClass="HomeViewController" customModule="LiveParking" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3cW-Qy-xdk">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -46,7 +47,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2EG-TT-dpW">
                                                     <rect key="frame" x="20" y="43" width="262" height="23"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                                    <nil key="textColor"/>
+                                                    <color key="textColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PARKING NAME" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kee-ig-Kzg">
@@ -100,7 +101,7 @@
                         <viewLayoutGuide key="safeArea" id="FuN-4C-Pa7"/>
                     </view>
                     <navigationItem key="navigationItem" title="Ghent Parking" id="PkQ-0f-Nqz">
-                        <barButtonItem key="rightBarButtonItem" title="Sort" id="XT7-2x-2UP">
+                        <barButtonItem key="rightBarButtonItem" title="SORT" id="XT7-2x-2UP">
                             <connections>
                                 <action selector="handleSortButton:" destination="G80-n3-vei" id="a0p-A7-DtW"/>
                             </connections>
@@ -112,13 +113,13 @@
                         <segue destination="YTk-3z-0XT" kind="show" identifier="ViewSort" id="Gep-uq-QZ6"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="YNd-9C-7vh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-552.17391304347825" y="-64.285714285714278"/>
         </scene>
         <!--Parking Detail-->
         <scene sceneID="2aA-f3-dYD">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WQU-wc-xqN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <tableViewController id="g8c-h9-Pfi" customClass="DetailViewController" customModule="LiveParking" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="nA9-nC-cQQ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -241,7 +242,7 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="MapView" id="b70-Qn-4Sp">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="279" id="GLB-r3-8Od">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="279" id="GLB-r3-8Od">
                                         <rect key="frame" x="20" y="284" width="374" height="279"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GLB-r3-8Od" id="TLW-YG-eFL">
@@ -274,7 +275,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Park Here" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zKs-oa-yoL">
                                                     <rect key="frame" x="20" y="11" width="334" height="38"/>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="28"/>
-                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="textColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -285,7 +286,6 @@
                                                 <constraint firstItem="zKs-oa-yoL" firstAttribute="leading" secondItem="BDl-br-xL6" secondAttribute="leadingMargin" id="lvG-hH-S1B"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -304,30 +304,30 @@
                         <outlet property="parkLabel" destination="zKs-oa-yoL" id="ufd-Pk-clB"/>
                     </connections>
                 </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="WQU-wc-xqN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="155.07246376811597" y="-64.285714285714278"/>
         </scene>
         <!--Sort By-->
         <scene sceneID="q8h-rP-jdH">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jqf-ww-tFb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController id="YTk-3z-0XT" customClass="SortViewController" customModule="LiveParking" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="CoG-QO-CXr">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="AIH-mO-drp">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
+                                <rect key="frame" x="0.0" y="140" width="414" height="722"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SortTableViewCell" id="eR8-Me-XpG" customClass="SortTableViewCell" customModule="LiveParking" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="55.5" width="374" height="48.5"/>
+                                        <rect key="frame" x="20" y="55.5" width="374" height="49"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="eR8-Me-XpG" id="aO8-zc-yNb">
-                                            <rect key="frame" x="0.0" y="0.0" width="374" height="48.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="374" height="49"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="blU-Ml-kyO">
-                                                    <rect key="frame" x="20" y="11" width="334" height="26"/>
+                                                    <rect key="frame" x="20" y="11" width="334" height="26.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -362,9 +362,8 @@
                         <outlet property="tableView" destination="AIH-mO-drp" id="5YN-MB-peQ"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="jqf-ww-tFb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-478" y="596"/>
+            <point key="canvasLocation" x="-478.26086956521743" y="595.98214285714278"/>
         </scene>
     </scenes>
 </document>

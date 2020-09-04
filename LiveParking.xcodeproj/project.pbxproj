@@ -16,13 +16,18 @@
 		A6510020250131D00020CA04 /* ParkingSortOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A651001F250131D00020CA04 /* ParkingSortOrder.swift */; };
 		A6510022250132BB0020CA04 /* SortViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6510021250132BB0020CA04 /* SortViewController.swift */; };
 		A6510024250133C80020CA04 /* SortTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6510023250133C80020CA04 /* SortTableViewCell.swift */; };
+		A68615CF250191F8004FF4A2 /* TableViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68615CE250191F8004FF4A2 /* TableViewExtension.swift */; };
+		A68615D425019A11004FF4A2 /* ParkingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68615D325019A11004FF4A2 /* ParkingViewModel.swift */; };
+		A68615D62501A11E004FF4A2 /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68615D52501A11E004FF4A2 /* DetailViewModel.swift */; };
+		A68615D8250230D1004FF4A2 /* ParkingAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68615D7250230D1004FF4A2 /* ParkingAPIRequest.swift */; };
 		A6AD7AC224FFB67900FFFD4D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6AD7AC124FFB67900FFFD4D /* AppDelegate.swift */; };
 		A6AD7AC624FFB67900FFFD4D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6AD7AC524FFB67900FFFD4D /* HomeViewController.swift */; };
 		A6AD7AC924FFB67900FFFD4D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A6AD7AC724FFB67900FFFD4D /* Main.storyboard */; };
 		A6AD7ACB24FFB68100FFFD4D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A6AD7ACA24FFB68100FFFD4D /* Assets.xcassets */; };
 		A6AD7ACE24FFB68100FFFD4D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A6AD7ACC24FFB68100FFFD4D /* LaunchScreen.storyboard */; };
 		A6AD7AFB24FFBE2F00FFFD4D /* ParkingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6AD7AFA24FFBE2F00FFFD4D /* ParkingTableViewCell.swift */; };
-		A6AD7B0024FFC95700FFFD4D /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6AD7AFF24FFC95600FFFD4D /* Network.swift */; };
+		A6AD7B0024FFC95700FFFD4D /* NetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6AD7AFF24FFC95600FFFD4D /* NetworkRequest.swift */; };
+		A6CFE38D250260C2006E0551 /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CFE38C250260C2006E0551 /* UserPreferences.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,12 +35,15 @@
 		A62693AC24FFDFCA005DE6C1 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		A62693AF24FFEF76005DE6C1 /* MapExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapExtension.swift; sourceTree = "<group>"; };
 		A62693B1250026D0005DE6C1 /* RoundedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedLabel.swift; sourceTree = "<group>"; };
-		A651001925004FF80020CA04 /* ghent.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = ghent.gpx; path = ../ghent.gpx; sourceTree = "<group>"; };
 		A651001B25011A240020CA04 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		A651001D250124670020CA04 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		A651001F250131D00020CA04 /* ParkingSortOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParkingSortOrder.swift; sourceTree = "<group>"; };
 		A6510021250132BB0020CA04 /* SortViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortViewController.swift; sourceTree = "<group>"; };
 		A6510023250133C80020CA04 /* SortTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortTableViewCell.swift; sourceTree = "<group>"; };
+		A68615CE250191F8004FF4A2 /* TableViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewExtension.swift; sourceTree = "<group>"; };
+		A68615D325019A11004FF4A2 /* ParkingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParkingViewModel.swift; sourceTree = "<group>"; };
+		A68615D52501A11E004FF4A2 /* DetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
+		A68615D7250230D1004FF4A2 /* ParkingAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParkingAPIRequest.swift; sourceTree = "<group>"; };
 		A6AD7ABE24FFB67900FFFD4D /* LiveParking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveParking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6AD7AC124FFB67900FFFD4D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A6AD7AC524FFB67900FFFD4D /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -44,7 +52,8 @@
 		A6AD7ACD24FFB68100FFFD4D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A6AD7ACF24FFB68100FFFD4D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A6AD7AFA24FFBE2F00FFFD4D /* ParkingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParkingTableViewCell.swift; sourceTree = "<group>"; };
-		A6AD7AFF24FFC95600FFFD4D /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		A6AD7AFF24FFC95600FFFD4D /* NetworkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequest.swift; sourceTree = "<group>"; };
+		A6CFE38C250260C2006E0551 /* UserPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferences.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				A62693AF24FFEF76005DE6C1 /* MapExtension.swift */,
+				A68615CE250191F8004FF4A2 /* TableViewExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -84,10 +94,19 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		A68615D2250199FF004FF4A2 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				A68615D325019A11004FF4A2 /* ParkingViewModel.swift */,
+				A68615D52501A11E004FF4A2 /* DetailViewModel.swift */,
+				A6CFE38C250260C2006E0551 /* UserPreferences.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		A6AD7AB524FFB67900FFFD4D = {
 			isa = PBXGroup;
 			children = (
-				A651001925004FF80020CA04 /* ghent.gpx */,
 				A6AD7AC024FFB67900FFFD4D /* LiveParking */,
 				A6AD7ABF24FFB67900FFFD4D /* Products */,
 				A651001A25011A240020CA04 /* Frameworks */,
@@ -111,6 +130,7 @@
 				A6AD7B0124FFC95B00FFFD4D /* Helpers */,
 				A62693AB24FFDA89005DE6C1 /* Model */,
 				A6AD7AF524FFB80C00FFFD4D /* Resources */,
+				A68615D2250199FF004FF4A2 /* ViewModel */,
 				A6AD7AF324FFB7F100FFFD4D /* Views */,
 			);
 			path = LiveParking;
@@ -158,7 +178,8 @@
 		A6AD7B0124FFC95B00FFFD4D /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				A6AD7AFF24FFC95600FFFD4D /* Network.swift */,
+				A6AD7AFF24FFC95600FFFD4D /* NetworkRequest.swift */,
+				A68615D7250230D1004FF4A2 /* ParkingAPIRequest.swift */,
 				A651001D250124670020CA04 /* LocationService.swift */,
 			);
 			path = Helpers;
@@ -235,18 +256,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A6AD7B0024FFC95700FFFD4D /* Network.swift in Sources */,
+				A6AD7B0024FFC95700FFFD4D /* NetworkRequest.swift in Sources */,
+				A68615D8250230D1004FF4A2 /* ParkingAPIRequest.swift in Sources */,
+				A68615D425019A11004FF4A2 /* ParkingViewModel.swift in Sources */,
 				A6510020250131D00020CA04 /* ParkingSortOrder.swift in Sources */,
 				A6AD7AC624FFB67900FFFD4D /* HomeViewController.swift in Sources */,
 				A6AD7AFB24FFBE2F00FFFD4D /* ParkingTableViewCell.swift in Sources */,
 				A62693B024FFEF76005DE6C1 /* MapExtension.swift in Sources */,
 				A62693AA24FFDA83005DE6C1 /* ParkingModel.swift in Sources */,
+				A6CFE38D250260C2006E0551 /* UserPreferences.swift in Sources */,
 				A6510022250132BB0020CA04 /* SortViewController.swift in Sources */,
 				A6AD7AC224FFB67900FFFD4D /* AppDelegate.swift in Sources */,
 				A62693B2250026D0005DE6C1 /* RoundedLabel.swift in Sources */,
 				A6510024250133C80020CA04 /* SortTableViewCell.swift in Sources */,
 				A651001E250124670020CA04 /* LocationService.swift in Sources */,
 				A62693AD24FFDFCA005DE6C1 /* DetailViewController.swift in Sources */,
+				A68615D62501A11E004FF4A2 /* DetailViewModel.swift in Sources */,
+				A68615CF250191F8004FF4A2 /* TableViewExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
