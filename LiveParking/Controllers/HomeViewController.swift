@@ -59,9 +59,6 @@ class HomeViewController: UIViewController, StoryboardInstantiable {
             DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + nextUpdateInterval) {
                 self?.fetchParkingRecord()
             }
-            
-            //TESTING
-            self?.updateTimer()
         }
     }
     
@@ -69,14 +66,6 @@ class HomeViewController: UIViewController, StoryboardInstantiable {
         let vc = SortViewController.instantiateFromStoryboard()
         vc.delegate = self
         self.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func updateTimer() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            let nextUpdateInterval = ParkingDateHelper.getNextUpdateInterval(since: self.model.recentUpdateDate)
-            self.title = "\(Int(nextUpdateInterval)) Sec"
-            self.updateTimer()
-        }
     }
 }
 

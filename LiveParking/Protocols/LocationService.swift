@@ -16,6 +16,7 @@ public protocol LocationServiceDelegate: class {
 public protocol LocationService: class {
     var delegate: LocationServiceDelegate? { get set }
     var lastUpdatedLocation:CLLocation! { get }
+    
     func startUpdateLocation()
     func stopUpdateLocation()
     func calculateLineDistance(between from:CLLocation, _ to:CLLocation, completion: @escaping(CLLocationDistance) -> ())

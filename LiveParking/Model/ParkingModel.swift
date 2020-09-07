@@ -8,6 +8,7 @@ class ParkingModel: Codable {
     let parameters: Parameters
     var records: [Record]
     var recentUpdateDate = Date()
+    fileprivate var isUpdatingDistances:Bool = false
 
     enum CodingKeys: String, CodingKey {
         case nhits, parameters, records
@@ -111,23 +112,26 @@ extension ParkingModel {
     
     func calculateParkingDistance(from location: CLLocation, locationService:LocationService, completion:@escaping() -> Void) {
         
+        guard isUpdatingDistances == false else {
+            return
+        }
+        isUpdatingDistances = true
+        
         let group = DispatchGroup()
         for i in records.indices {
             let parkingLocation = records[i].geometry.location
             group.enter()
             
             locationService.calculateRouteDistance(between: parkingLocation, location) { [weak self] (distance) in
-                if let record = self?.records[i] {
-                    let name = record.fields.name
-                    let distanceInKM = distance / 1000.0
-                    self?.records[i].userDistance = distanceInKM
-                    print("\(name): \(distanceInKM) KM")
+                if self?.records[i] != nil {
+                    self?.records[i].userDistance = distance
                 }
                 group.leave()
             }
         }
         
         group.notify(queue: .main) {
+            self.isUpdatingDistances = false
             completion()
         }
     }

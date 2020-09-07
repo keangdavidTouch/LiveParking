@@ -20,7 +20,7 @@ struct ParkingViewModel {
     }
     
     var capacityDescription: String {
-        return "\(model.fields.availableCapacity) Available (\(Int(model.userDistance)) km)"
+        return "\(model.fields.availableCapacity) Available"
     }
     
     var capacityColor: UIColor {

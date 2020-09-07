@@ -39,10 +39,7 @@ class DefaultLocationService:NSObject, LocationService {
         locationManager.startUpdatingLocation()
         
         if let location = self.lastUpdatedLocation {
-            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 2.0) {
-                print("✅ START UPDATE LOCATION...")
-                self.delegate?.locationService(didUpdateLocation: location)
-            }
+            self.delegate?.locationService(didUpdateLocation: location)
         }
     }
     
@@ -91,19 +88,12 @@ extension DefaultLocationService: CLLocationManagerDelegate {
        
         //Filter location
         if let last = lastLocation {
-            let age = location.timestamp.timeIntervalSince(last.timestamp)
-            if age < 10.0 {
-                getLocationDescription(of: location) {
-                    print("❌ Discard Location(🔎 age == \(age) -> \($0)")
-                }
+            if location.timestamp.timeIntervalSince(last.timestamp) < 10.0 {
                 return
             }
         }
         
-        getLocationDescription(of: location) {
-            print("📍New Location -> \($0)")
-            self.delegate?.locationService(didUpdateLocation: location)
-            self.lastLocation = location
-        }
+        self.delegate?.locationService(didUpdateLocation: location)
+        self.lastLocation = location
     }
 }
