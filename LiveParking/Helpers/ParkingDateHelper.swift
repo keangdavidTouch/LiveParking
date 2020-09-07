@@ -27,13 +27,10 @@ struct ParkingDateHelper {
     static func getNextUpdateInterval(since lastDate:Date) -> TimeInterval {
         let next = Date(timeInterval: apiUpdateInterval, since: lastDate)
         let newUpdateInterval = next.timeIntervalSinceNow
-        
         if newUpdateInterval > 0 {
             return newUpdateInterval
         }
         
-        return apiUpdateInterval
+        return apiUpdateInterval / 2.0
     }
-    
-    
 }

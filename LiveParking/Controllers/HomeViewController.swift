@@ -10,49 +10,58 @@ import UIKit
 import CoreLocation
 import MapKit
 
-class HomeViewController: UIViewController {
-    
-    var model:ParkingModel!
-    let request = ParkingAPIRequest()
-    let dateHelper = ParkingDateHelper()
-    let locationService = DefaultLocationService()
+class HomeViewController: UIViewController, StoryboardInstantiable {
+
     @IBOutlet weak var tableView: UITableView!
+    
+    static var storyboardName: String {
+        return StoryboardName.main.rawValue
+    }
+    
+    let dateHelper = ParkingDateHelper()
+    var request = ParkingAPIRequest()
+    var locationService:LocationService!
+    var model:ParkingModel! {
+        didSet {
+            model.fetchRecentUpdateDate()
+            if let sortIndex = UserPreferences.sortOrder.value as? Int {
+                model.sortRecords(by: ParkingSortOrder(rawValue: sortIndex) ?? .alphabet)
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
         locationService.delegate = self
-        fetchParkingRecord()
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.fetchParkingRecord()
+        }
     }
     
     func fetchParkingRecord() {
-        DispatchQueue.global(qos: .userInteractive).async {
-            self.request.load { [weak self] (parkingModel:ParkingModel?) in
-                
-                guard let model = parkingModel else { return }
-                print("✅ [NEW RECORDS UPDATED]...............")
-                self?.model = model
-                
-                let sortIndex = UserPreferences.sortOrder.value as? Int
-                self?.model.sortRecords(by: ParkingSortOrder(rawValue: sortIndex ?? 0) ?? .alphabet)
-                
-                self?.locationService.startUpdateLocation()
-                
-                let lastUpdate = model.recentUpdateDate
-                let nextUpdateInterval = ParkingDateHelper.getNextUpdateInterval(since: lastUpdate)
-                print("Next Update Interval: \(nextUpdateInterval) SEC")
-                self?.updateTimer()
-                
-                // Schedule Next RecordFetching
-                DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + nextUpdateInterval) {
-                    self?.fetchParkingRecord()
-                }
-                
-                DispatchQueue.main.async {
-                    self!.tableView.reloadData()
-                }
+        self.request.load { [weak self] (parkingModel:ParkingModel?) in
+            guard let model = parkingModel else { return }
+            self?.model = model
+            
+            //Start requesting location
+            self?.locationService.startUpdateLocation()
+            
+            //Reload TableView on main thread
+            DispatchQueue.main.async {
+                self!.tableView.reloadData()
             }
+            
+            //Schedule New Records Request
+            let lastUpdate = model.recentUpdateDate
+            let nextUpdateInterval = ParkingDateHelper.getNextUpdateInterval(since: lastUpdate)
+            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + nextUpdateInterval) {
+                self?.fetchParkingRecord()
+            }
+            
+            //TESTING
+            self?.updateTimer()
         }
     }
     
@@ -76,11 +85,11 @@ extension HomeViewController: LocationServiceDelegate {
     func locationService(didUpdateLocation location: CLLocation) {
         model.calculateParkingDistance(from: location, locationService: locationService, completion: { [weak self] in
             
-            let sortIndex = UserPreferences.sortOrder.value as? Int
-            if(sortIndex == ParkingSortOrder.distance.rawValue) {
+            if let sortIndex = UserPreferences.sortOrder.value as? Int,
+                sortIndex == ParkingSortOrder.distance.rawValue {
                 self?.model.sortRecords(by: .distance)
+                self?.tableView.reloadData()
             }
-            self?.tableView.reloadData()
         })
     }
 }

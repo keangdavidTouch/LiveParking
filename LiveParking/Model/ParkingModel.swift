@@ -7,6 +7,7 @@ class ParkingModel: Codable {
     let nhits: Int
     let parameters: Parameters
     var records: [Record]
+    var recentUpdateDate = Date()
 
     enum CodingKeys: String, CodingKey {
         case nhits, parameters, records
@@ -82,11 +83,10 @@ struct Geometry: Codable {
 // MARK: - ParkingModel Functions
 extension ParkingModel {
     
-    var recentUpdateDate: Date {
-        guard let record = records.first else {
-            return Date()
+    func fetchRecentUpdateDate() {
+        if let record = records.first {
+            recentUpdateDate = ParkingDateHelper.getDate(from: record.fields.lastupdate)
         }
-        return ParkingDateHelper.getDate(from: record.fields.lastupdate)
     }
     
     func sortRecords(by sortOrder:ParkingSortOrder) {
@@ -112,14 +112,14 @@ extension ParkingModel {
     func calculateParkingDistance(from location: CLLocation, locationService:LocationService, completion:@escaping() -> Void) {
         
         let group = DispatchGroup()
-        
         for i in records.indices {
             let parkingLocation = records[i].geometry.location
             group.enter()
             
             locationService.calculateRouteDistance(between: parkingLocation, location) { [weak self] (distance) in
-                self?.records[i].userDistance = distance / 1000.0
-                print("\(distance / 1000.0) KM")
+                let distanceInKM = distance / 1000.0
+                self?.records[i].userDistance = distanceInKM
+                print("\(self?.records[i].fields.name ?? "name"): \(distanceInKM) KM")
                 group.leave()
             }
         }
@@ -127,6 +127,5 @@ extension ParkingModel {
         group.notify(queue: .main) {
             completion()
         }
-
     }
 }

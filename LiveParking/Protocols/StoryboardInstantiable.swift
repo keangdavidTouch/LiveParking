@@ -1,5 +1,5 @@
 //
-//  StoryboardExtension.swift
+//  StoryboardInstantiable.swift
 //  LiveParking
 //
 //  Created by touch keang david on 9/7/20.
@@ -27,12 +27,4 @@ extension StoryboardInstantiable {
         return storyboard.instantiateViewController(withIdentifier: identifier) as! T
     }
 }
-//
-//  StoryboardInstantiable.swift
-//  LiveParking
-//
-//  Created by touch keang david on 9/7/20.
-//  Copyright © 2020 Keang David. All rights reserved.
-//
 
-import Foundation

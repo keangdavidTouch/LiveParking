@@ -22,6 +22,7 @@
 		A68615D8250230D1004FF4A2 /* ParkingAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68615D7250230D1004FF4A2 /* ParkingAPIRequest.swift */; };
 		A68B626125053FE700193D3D /* ParkingDateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68B626025053FE700193D3D /* ParkingDateHelper.swift */; };
 		A68B626525064F5C00193D3D /* StoryboardInstantiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68B626425064F5C00193D3D /* StoryboardInstantiable.swift */; };
+		A68B6268250687F000193D3D /* DefaultLocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68B6267250687F000193D3D /* DefaultLocationService.swift */; };
 		A6AD7AC224FFB67900FFFD4D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6AD7AC124FFB67900FFFD4D /* AppDelegate.swift */; };
 		A6AD7AC624FFB67900FFFD4D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6AD7AC524FFB67900FFFD4D /* HomeViewController.swift */; };
 		A6AD7AC924FFB67900FFFD4D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A6AD7AC724FFB67900FFFD4D /* Main.storyboard */; };
@@ -48,6 +49,7 @@
 		A68615D7250230D1004FF4A2 /* ParkingAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParkingAPIRequest.swift; sourceTree = "<group>"; };
 		A68B626025053FE700193D3D /* ParkingDateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParkingDateHelper.swift; sourceTree = "<group>"; };
 		A68B626425064F5C00193D3D /* StoryboardInstantiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardInstantiable.swift; sourceTree = "<group>"; };
+		A68B6267250687F000193D3D /* DefaultLocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultLocationService.swift; sourceTree = "<group>"; };
 		A6AD7ABE24FFB67900FFFD4D /* LiveParking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveParking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6AD7AC124FFB67900FFFD4D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A6AD7AC524FFB67900FFFD4D /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 			children = (
 				A62693A924FFDA83005DE6C1 /* ParkingModel.swift */,
 				A651001F250131D00020CA04 /* ParkingSortOrder.swift */,
+				A6CFE38C250260C2006E0551 /* UserPreferences.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -103,7 +106,6 @@
 			children = (
 				A68615D325019A11004FF4A2 /* ParkingViewModel.swift */,
 				A68615D52501A11E004FF4A2 /* DetailViewModel.swift */,
-				A6CFE38C250260C2006E0551 /* UserPreferences.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -111,6 +113,8 @@
 		A68B626625064F6900193D3D /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				A651001D250124670020CA04 /* LocationService.swift */,
+				A6AD7AFF24FFC95600FFFD4D /* NetworkRequest.swift */,
 				A68B626425064F5C00193D3D /* StoryboardInstantiable.swift */,
 			);
 			path = Protocols;
@@ -141,10 +145,10 @@
 				A62693AE24FFEF53005DE6C1 /* Extension */,
 				A6AD7B0124FFC95B00FFFD4D /* Helpers */,
 				A62693AB24FFDA89005DE6C1 /* Model */,
+				A68B626625064F6900193D3D /* Protocols */,
 				A6AD7AF524FFB80C00FFFD4D /* Resources */,
 				A68615D2250199FF004FF4A2 /* ViewModel */,
 				A6AD7AF324FFB7F100FFFD4D /* Views */,
-				A68B626625064F6900193D3D /* Protocols */,
 			);
 			path = LiveParking;
 			sourceTree = "<group>";
@@ -191,10 +195,9 @@
 		A6AD7B0124FFC95B00FFFD4D /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				A6AD7AFF24FFC95600FFFD4D /* NetworkRequest.swift */,
 				A68615D7250230D1004FF4A2 /* ParkingAPIRequest.swift */,
 				A68B626025053FE700193D3D /* ParkingDateHelper.swift */,
-				A651001D250124670020CA04 /* LocationService.swift */,
+				A68B6267250687F000193D3D /* DefaultLocationService.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -276,6 +279,7 @@
 				A68615D425019A11004FF4A2 /* ParkingViewModel.swift in Sources */,
 				A6510020250131D00020CA04 /* ParkingSortOrder.swift in Sources */,
 				A6AD7AC624FFB67900FFFD4D /* HomeViewController.swift in Sources */,
+				A68B6268250687F000193D3D /* DefaultLocationService.swift in Sources */,
 				A6AD7AFB24FFBE2F00FFFD4D /* ParkingTableViewCell.swift in Sources */,
 				A62693B024FFEF76005DE6C1 /* MapExtension.swift in Sources */,
 				A62693AA24FFDA83005DE6C1 /* ParkingModel.swift in Sources */,

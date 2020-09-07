@@ -1,29 +1,24 @@
 //
-//  LocationService.swift
+//  DefaultLocationService.swift
 //  LiveParking
 //
-//  Created by touch keang david on 9/3/20.
+//  Created by touch keang david on 9/7/20.
 //  Copyright © 2020 Keang David. All rights reserved.
 //
 
 import MapKit
 import CoreLocation
 
-public protocol LocationServiceDelegate: class {
-    func locationService(didUpdateLocation location: CLLocation)
-}
-
-public protocol LocationService: class {
-    func startUpdateLocation()
-    func stopUpdateLocation()
-    func calculateRouteDistance(between from:CLLocation, _ to:CLLocation, completion: @escaping(CLLocationDistance) -> ())
-}
-
 class DefaultLocationService:NSObject, LocationService {
     
-    private var locationManager:CLLocationManager!
     private let geoCoder = CLGeocoder()
+    private var lastLocation:CLLocation!
+    private var locationManager:CLLocationManager!
     weak var delegate:LocationServiceDelegate?
+    
+    var lastUpdatedLocation: CLLocation! {
+        return lastLocation
+    }
     
     override init() {
         super.init()
@@ -42,10 +37,19 @@ class DefaultLocationService:NSObject, LocationService {
     
     public func startUpdateLocation() {
         locationManager.startUpdatingLocation()
+        print("✅ START UPDATE LOCATION...")
+        if let location = lastUpdatedLocation {
+            self.delegate?.locationService(didUpdateLocation: location)
+        }
     }
     
     public func stopUpdateLocation() {
         locationManager.stopUpdatingLocation()
+    }
+    
+    public func calculateLineDistance(between from: CLLocation, _ to: CLLocation, completion: @escaping (CLLocationDistance) -> ()) {
+        let distance = to.distance(from: from)
+        completion(distance)
     }
     
     public func calculateRouteDistance(between from:CLLocation, _ to:CLLocation, completion: @escaping(CLLocationDistance) -> ()) {
@@ -81,22 +85,21 @@ extension DefaultLocationService: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
-        
-        let age = -location.timestamp.timeIntervalSinceNow
-        print("Update Location \(age)")
-        if age > 10{
-            return
-        }
-        
-        if location.horizontalAccuracy < 0 || location.horizontalAccuracy > 100{
-            return
+       
+        if let last = lastLocation {
+            let age = location.timestamp.timeIntervalSince(last.timestamp)
+            if age < 10.0 {
+                getLocationDescription(of: location) {
+                    print("❌ Discard Location(🔎 age == \(age) -> \($0)")
+                }
+                return
+            }
         }
         
         getLocationDescription(of: location) {
             print("📍New Location -> \($0)")
             self.delegate?.locationService(didUpdateLocation: location)
+            self.lastLocation = location
         }
     }
 }
-
-

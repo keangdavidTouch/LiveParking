@@ -16,19 +16,20 @@ protocol DetailViewControllerDelegate: class {
 
 class DetailViewController: UITableViewController, StoryboardInstantiable {
     
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var contactDetailLabel: UILabel!
+    @IBOutlet weak var addressLabel: UILabel!
+    @IBOutlet weak var parkLabel: UILabel!
+    @IBOutlet weak var mapView: MKMapView!
+    
     static var storyboardName: String {
         return StoryboardName.main.rawValue
     }
     
     var model:Record!
     private var viewModel:DetailViewModel!
+    private let parkButtonSection = 2
     weak var delegate:DetailViewControllerDelegate?
-    
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var contactDetailLabel: UILabel!
-    @IBOutlet weak var addressLabel: UILabel!
-    @IBOutlet weak var parkLabel: UILabel!
-    @IBOutlet weak var mapView: MKMapView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,10 +50,12 @@ class DetailViewController: UITableViewController, StoryboardInstantiable {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 2 {
+        if indexPath.section == parkButtonSection {
             UserPreferences.parkingID.save(!viewModel.parkByUser ? model.fields.id : "")
+            
             viewModel.updateParkingState()
             delegate?.detailViewControllerDidPressPark()
+            self.navigationController?.popToRootViewController(animated: true)
         }
     }
 }

@@ -15,11 +15,12 @@ protocol SortViewControllerDelegate: class {
 
 class SortViewController: UIViewController, StoryboardInstantiable {
 
+    @IBOutlet weak var tableView: UITableView!
+    
     static var storyboardName: String {
         return StoryboardName.main.rawValue
     }
-
-    @IBOutlet weak var tableView: UITableView!
+    
     weak var delegate:SortViewControllerDelegate?
     var selectedSortIndex = ParkingSortOrder.alphabet.rawValue
     
