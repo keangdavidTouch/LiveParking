@@ -31,6 +31,6 @@ struct ParkingDateHelper {
             return newUpdateInterval
         }
         
-        return apiUpdateInterval / 2.0
+        return TimeInterval(2.0 * 60)
     }
 }

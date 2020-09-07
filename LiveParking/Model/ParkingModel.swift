@@ -117,9 +117,12 @@ extension ParkingModel {
             group.enter()
             
             locationService.calculateRouteDistance(between: parkingLocation, location) { [weak self] (distance) in
-                let distanceInKM = distance / 1000.0
-                self?.records[i].userDistance = distanceInKM
-                print("\(self?.records[i].fields.name ?? "name"): \(distanceInKM) KM")
+                if let record = self?.records[i] {
+                    let name = record.fields.name
+                    let distanceInKM = distance / 1000.0
+                    self?.records[i].userDistance = distanceInKM
+                    print("\(name): \(distanceInKM) KM")
+                }
                 group.leave()
             }
         }
