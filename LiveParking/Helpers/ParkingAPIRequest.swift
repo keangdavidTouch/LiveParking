@@ -10,7 +10,13 @@ import Foundation
 
 class ParkingAPIRequest {
     
-    let url = URL(string: "https://data.stad.gent/api/records/1.0/search/?dataset=bezetting-parkeergarages-real-time&q=&rows=10")!
+    let url:URL
+    private var urlString = "https://data.stad.gent/api/records/1.0/search/?dataset=bezetting-parkeergarages-real-time&q=&sort=lastupdate"
+    
+    init(rows:Int = 10) {
+        urlString.append(contentsOf: "&rows=\(rows)")
+        url = URL(string: urlString)!
+    }
 }
 
 extension ParkingAPIRequest: NetworkRequest {
@@ -20,7 +26,7 @@ extension ParkingAPIRequest: NetworkRequest {
             return try JSONDecoder().decode(ParkingModel.self, from: data)
         }
         catch {
-            print(error)
+            print("Errors while decoding Parking Records: \(error)")
             return nil
         }
     }

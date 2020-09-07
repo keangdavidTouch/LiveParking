@@ -14,25 +14,42 @@ class HomeViewController: UIViewController {
     
     var model:ParkingModel!
     let request = ParkingAPIRequest()
+    let dateHelper = ParkingDateHelper()
+    let locationService = DefaultLocationService()
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-        fetchRealTimeParkingRecord()
+        locationService.delegate = self
+        fetchParkingRecord()
     }
     
-    func fetchRealTimeParkingRecord() {
+    func fetchParkingRecord() {
         DispatchQueue.global(qos: .userInteractive).async {
             self.request.load { [weak self] (parkingModel:ParkingModel?) in
+                
                 guard let model = parkingModel else { return }
+                print("✅ [NEW RECORDS UPDATED]...............")
                 self?.model = model
-                if let sortIndex = UserPreferences.sortOrder.value as? Int {
-                    self?.model.sortRecords(by: ParkingSortOrder(rawValue: sortIndex) ?? .alphabet)
+                
+                let sortIndex = UserPreferences.sortOrder.value as? Int
+                self?.model.sortRecords(by: ParkingSortOrder(rawValue: sortIndex ?? 0) ?? .alphabet)
+                
+                self?.locationService.startUpdateLocation()
+                
+                let lastUpdate = model.recentUpdateDate
+                let nextUpdateInterval = ParkingDateHelper.getNextUpdateInterval(since: lastUpdate)
+                print("Next Update Interval: \(nextUpdateInterval) SEC")
+                self?.updateTimer()
+                
+                // Schedule Next RecordFetching
+                DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + nextUpdateInterval) {
+                    self?.fetchParkingRecord()
                 }
-                self?.calculateDistance()
-                OperationQueue.main.addOperation {
+                
+                DispatchQueue.main.async {
                     self!.tableView.reloadData()
                 }
             }
@@ -40,35 +57,31 @@ class HomeViewController: UIViewController {
     }
     
     @IBAction func handleSortButton(_ sender: Any) {
-        self.performSegue(withIdentifier: "ViewSort", sender: self)
+        let vc = SortViewController.instantiateFromStoryboard()
+        vc.delegate = self
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
-    private func calculateDistance() {
-        
-        guard let from = LocationService.shared.latestLocation else { return }
-        
-        for i in model.records.indices {
-            
-            let to = model.records[i].geometry.location
-            
-            LocationService.shared.calculateTripDistance(from, to) { (distance) in
-                self.model.records[i].userDistance = distance / 1000.0
-                print("\(distance / 1000.0) KM")
-            }
+    func updateTimer() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            let nextUpdateInterval = ParkingDateHelper.getNextUpdateInterval(since: self.model.recentUpdateDate)
+            self.title = "\(Int(nextUpdateInterval)) Sec"
+            self.updateTimer()
         }
     }
+}
+
+extension HomeViewController: LocationServiceDelegate {
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if let detailVC = segue.destination as? DetailViewController {
-            if let indexPath = tableView.indexPathForSelectedRow {
-                detailVC.delegate = self
-                detailVC.model = model.records[indexPath.row]
+    func locationService(didUpdateLocation location: CLLocation) {
+        model.calculateParkingDistance(from: location, locationService: locationService, completion: { [weak self] in
+            
+            let sortIndex = UserPreferences.sortOrder.value as? Int
+            if(sortIndex == ParkingSortOrder.distance.rawValue) {
+                self?.model.sortRecords(by: .distance)
             }
-        }
-        else if let sortVC = segue.destination as? SortViewController {
-            sortVC.delegate = self
-        }
+            self?.tableView.reloadData()
+        })
     }
 }
 
@@ -87,10 +100,15 @@ extension HomeViewController: SortViewControllerDelegate {
     }
 }
 
+// MARK: - TableView Delegate/Datasource
+
 extension HomeViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.performSegue(withIdentifier: "ViewDetail", sender: self)
+        let vc = DetailViewController.instantiateFromStoryboard()
+        vc.delegate = self
+        vc.model = model.records[indexPath.row]
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 

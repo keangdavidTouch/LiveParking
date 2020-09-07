@@ -9,58 +9,54 @@
 import MapKit
 import CoreLocation
 
-class LocationService:NSObject, CLLocationManagerDelegate {
+public protocol LocationServiceDelegate: class {
+    func locationService(didUpdateLocation location: CLLocation)
+}
+
+public protocol LocationService: class {
+    func startUpdateLocation()
+    func stopUpdateLocation()
+    func calculateRouteDistance(between from:CLLocation, _ to:CLLocation, completion: @escaping(CLLocationDistance) -> ())
+}
+
+class DefaultLocationService:NSObject, LocationService {
     
-    static var shared = LocationService()
     private var locationManager:CLLocationManager!
     private let geoCoder = CLGeocoder()
-    var latestLocation:CLLocation!
+    weak var delegate:LocationServiceDelegate?
     
-    private override init() {
-        locationManager = CLLocationManager()
+    override init() {
         super.init()
-    }
-    
-    func start() {
+        locationManager = CLLocationManager()
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestAlwaysAuthorization()
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            locationManager.startUpdatingLocation()
+            locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+            locationManager.pausesLocationUpdatesAutomatically = true
+            locationManager.activityType = .automotiveNavigation
+            locationManager.distanceFilter = 10
+            locationManager.allowsBackgroundLocationUpdates = false
         }
     }
     
-    // MARK: - CLLocationManagerDelegate
-
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        latestLocation = locations[0]
-        getLocationDescription(from: locations[0]) {
-            print("📍🗺 Update Location -> \($0)")
-        }
-        //locationManager.stopUpdatingLocation()
+    public func startUpdateLocation() {
+        locationManager.startUpdatingLocation()
     }
     
-    func getLocationDescription(from location:CLLocation, completion: @escaping(String) -> ()) {
-        geoCoder.reverseGeocodeLocation(location) { placemarks, _ in
-            if let place = placemarks?.first {
-                
-                let description = "\(place.thoroughfare!) \(place.postalCode!) \(place.locality!) \(place.country!)"
-                completion(description)
-          }
-        }
+    public func stopUpdateLocation() {
+        locationManager.stopUpdatingLocation()
     }
     
-    func calculateTripDistance(_ from:CLLocation, _ to:CLLocation, completion: @escaping(CLLocationDistance) -> ()) {
+    public func calculateRouteDistance(between from:CLLocation, _ to:CLLocation, completion: @escaping(CLLocationDistance) -> ()) {
         let source          = MKPlacemark(coordinate: from.coordinate)
         let destination     = MKPlacemark(coordinate: to.coordinate)
         
         let request = MKDirections.Request()
         request.source      = MKMapItem(placemark: source)
         request.destination = MKMapItem(placemark: destination)
-        request.transportType = MKDirectionsTransportType.automobile;
-        request.requestsAlternateRoutes = true
+        request.transportType = MKDirectionsTransportType.automobile
+        request.requestsAlternateRoutes = false
 
         let directions = MKDirections(request: request)
 
@@ -68,6 +64,37 @@ class LocationService:NSObject, CLLocationManagerDelegate {
             if let response = response, let route = response.routes.first {
                 completion(route.distance)
             }
+        }
+    }
+    
+    func getLocationDescription(of location:CLLocation, completion: @escaping(String) -> ()) {
+        geoCoder.reverseGeocodeLocation(location) { placemarks, _ in
+            if let place = placemarks?.first {
+                let description = "\(place.thoroughfare!) \(place.postalCode!) \(place.locality!) \(place.country!)"
+                completion(description)
+          }
+        }
+    }
+}
+
+extension DefaultLocationService: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+        
+        let age = -location.timestamp.timeIntervalSinceNow
+        print("Update Location \(age)")
+        if age > 10{
+            return
+        }
+        
+        if location.horizontalAccuracy < 0 || location.horizontalAccuracy > 100{
+            return
+        }
+        
+        getLocationDescription(of: location) {
+            print("📍New Location -> \($0)")
+            self.delegate?.locationService(didUpdateLocation: location)
         }
     }
 }

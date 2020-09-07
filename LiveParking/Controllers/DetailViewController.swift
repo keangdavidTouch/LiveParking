@@ -14,8 +14,12 @@ protocol DetailViewControllerDelegate: class {
     func detailViewControllerDidPressPark()
 }
 
-class DetailViewController: UITableViewController {
- 
+class DetailViewController: UITableViewController, StoryboardInstantiable {
+    
+    static var storyboardName: String {
+        return StoryboardName.main.rawValue
+    }
+    
     var model:Record!
     private var viewModel:DetailViewModel!
     weak var delegate:DetailViewControllerDelegate?
@@ -45,7 +49,6 @@ class DetailViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         if indexPath.section == 2 {
             UserPreferences.parkingID.save(!viewModel.parkByUser ? model.fields.id : "")
             viewModel.updateParkingState()

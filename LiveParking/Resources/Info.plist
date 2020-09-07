@@ -22,12 +22,12 @@
 	<true/>
 	<key>MKDirectionsApplicationSupportedModes</key>
 	<array/>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>We need to access your location to find closest parking lots</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>We need to access your location to find closest parking lots</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need to access your location to find closest parking lots</string>
+	<string>We need to access your location to find closest parking </string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need to access your location to find closest parking </string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

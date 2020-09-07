@@ -3,10 +3,14 @@ import Foundation
 import MapKit
 
 // MARK: - ParkingModel
-struct ParkingModel: Codable {
+class ParkingModel: Codable {
     let nhits: Int
     let parameters: Parameters
     var records: [Record]
+
+    enum CodingKeys: String, CodingKey {
+        case nhits, parameters, records
+    }
 }
 
 // MARK: - Parameters
@@ -23,7 +27,6 @@ struct Record: Codable {
     let fields: Fields
     let geometry: Geometry
     let recordTimestamp: String
-    //var userParkState:Bool = false
     var userDistance:Double = 0.0
 
     enum CodingKeys: String, CodingKey {
@@ -53,7 +56,7 @@ struct Fields: Codable {
     var availableCapacity: Int {
         return availablecapacity ?? 0
     }
-
+    
     enum CodingKeys: String, CodingKey {
         case totalcapacityTest = "totalcapacity_test"
         case lastmodifieddate
@@ -78,7 +81,15 @@ struct Geometry: Codable {
 
 // MARK: - ParkingModel Functions
 extension ParkingModel {
-    mutating func sortRecords(by sortOrder:ParkingSortOrder) {
+    
+    var recentUpdateDate: Date {
+        guard let record = records.first else {
+            return Date()
+        }
+        return ParkingDateHelper.getDate(from: record.fields.lastupdate)
+    }
+    
+    func sortRecords(by sortOrder:ParkingSortOrder) {
         switch sortOrder {
             case .alphabet:
                 records.sort {
@@ -98,14 +109,24 @@ extension ParkingModel {
         }
     }
     
-//    mutating func setRecordParkState(at index:Int, isPark:Bool) {
-//        resetParkingStates()
-//        records[index].userParkState = isPark
-//    }
-//    
-//    mutating private func resetParkingStates() {
-//        for i in records.indices {
-//            records[i].userParkState = false
-//        }
-//    }
+    func calculateParkingDistance(from location: CLLocation, locationService:LocationService, completion:@escaping() -> Void) {
+        
+        let group = DispatchGroup()
+        
+        for i in records.indices {
+            let parkingLocation = records[i].geometry.location
+            group.enter()
+            
+            locationService.calculateRouteDistance(between: parkingLocation, location) { [weak self] (distance) in
+                self?.records[i].userDistance = distance / 1000.0
+                print("\(distance / 1000.0) KM")
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            completion()
+        }
+
+    }
 }

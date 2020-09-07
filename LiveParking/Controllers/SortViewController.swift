@@ -13,7 +13,11 @@ protocol SortViewControllerDelegate: class {
     func sortViewControllerDidPressSortBy(sortOrder: ParkingSortOrder)
 }
 
-class SortViewController: UIViewController {
+class SortViewController: UIViewController, StoryboardInstantiable {
+
+    static var storyboardName: String {
+        return StoryboardName.main.rawValue
+    }
 
     @IBOutlet weak var tableView: UITableView!
     weak var delegate:SortViewControllerDelegate?
